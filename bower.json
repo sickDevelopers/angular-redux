@@ -1,0 +1,19 @@
+{
+  "name": "angular-redux",
+  "homepage": "https://github.com/sickDevelopers/angular-redux",
+  "authors": [
+    "Oscar Chinellato <oscar.chinellato@sickdevelopers.com>"
+  ],
+  "description": "Angular provider for Redux pattern",
+  "main": "redux.js",
+  "moduleType": [],
+  "keywords": [
+    "angular",
+    "redux"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "angular": "~1.4.9",
+    "angular-redux": "*"
+  }
+}

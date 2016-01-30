@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<title>Angular Redux</title>
+
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-redux/redux.js"></script>
+
+	<script type="text/javascript">
+
+
+		var reducer = function(currentState, action) {
+			var newState;
+			if(!action || !action.type) {
+				return currentState;
+			}
+
+			newState = angular.copy(currentState);
+
+			switch(action.type) {
+				case 'INCREMENT':
+					newState.value++;
+					break;
+				case 'DECREMENT':
+					newState.value--;
+				default:
+					break;
+			}
+
+			return newState;
+		}
+
+		angular.module('reduxProvider', ['ngRedux'])
+			.config(['ReduxProvider', function(ReduxProvider) {
+				ReduxProvider.createStore(reducer, {value: 0});
+			}])
+		;
+
+		angular.module('app', [
+			'reduxProvider',
+			'app2'
+			])
+			.controller('Main', ['$scope','Redux', function($scope, Redux) {
+
+				console.log(Redux.getState());
+
+				$scope.value = 0;
+
+				var update = function() {
+					$scope.value = Redux.getState().value;
+				};
+
+				Redux.subscribe(update);
+
+				Redux.dispatch({
+					type: 'INCREMENT'
+				});
+
+			}])
+		;
+		angular.module('app2', [
+			'reduxProvider'
+			])
+			.controller('AnotherMain', ['Redux', '$timeout', '$scope', function(Redux, $timeout, $scope) {
+
+				$timeout(function() {
+					Redux.dispatch({
+					type: 'INCREMENT'
+				})	
+				}, 1000);
+
+				$scope.value = 0;
+
+				var update = function() {
+					$scope.value = Redux.getState().value;
+				};
+
+				Redux.subscribe(update);
+				
+			}])
+			;
+	</script>
+
+</head>
+<body>
+	<div ng-controller="Main">
+		Value : {{value}}
+	</div>
+	<div ng-controller="AnotherMain">
+		AnotherValue : {{value}}
+	</div>
+</body>
+</html>
